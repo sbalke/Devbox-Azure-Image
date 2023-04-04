@@ -1,0 +1,195 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "publisher": {
+            "type": "string",
+            "defaultValue": "microsoftvisualstudio"
+        },
+        "offer": {
+            "type": "string",
+            "defaultValue": "visualstudioplustools"
+        },
+        "sku": {
+            "type": "string",
+            "defaultValue": "vs-2022-pro-general-win11-m365-gen2"
+        },
+        "version": {
+            "type": "string",
+            "defaultValue": "latest",
+            "metadata": {
+                "description": "Version of the image, can be found with PowerShell: Get-AzVMImage -Location eastus -PublisherName MicrosoftWindowsDesktop -Offer windows-10 -Skus 19h1-evd"
+            }
+        },
+        "galleryID": {
+            "type": "string",
+            "metadata": {
+                "description": "The id of the share"
+            }
+        },
+        "galleryimageID": {
+            "type": "string"
+        },
+        "randomGUID": {
+            "type": "string",
+            "defaultValue": "[newGuid()]"
+        }
+    },
+    "variables": {
+        "imageTemplateName": "[concat('AIB_Devbox_',uniqueString('deployment().name',parameters('randomGUID')))]"
+    },
+    "resources": [
+        {
+            "name": "[variables('imageTemplateName')]",
+            "type": "Microsoft.VirtualMachineImages/imageTemplates",
+            "apiVersion": "2022-02-14",
+            "location": "eastus",
+            "dependsOn": [
+            ],
+            "tags": {
+            },
+            "identity": {
+                "type": "UserAssigned",
+                "userAssignedIdentities": {
+                    "/subscriptions/1c3e9cd3-5139-4478-b55b-8c632168518e/resourcegroups/DevBoxes/providers/Microsoft.ManagedIdentity/userAssignedIdentities/DevBox-ManagedID": {}
+                }
+            },
+            "properties": {
+                "vmProfile": {
+                    "vmSize": "Standard_DS1_v2",
+                    "osDiskSizeGB": 128,
+                    "userAssignedIdentities": []
+                },
+                "source": {
+                    "type": "PlatformImage",
+                    "publisher": "[parameters('publisher')]",
+                    "offer": "[parameters('offer')]",
+                    "sku": "[parameters('sku')]",
+                    "version": "[parameters('version')]"
+                },
+                "customize": [
+                    {
+                        "type": "PowerShell",
+                        "name": "InstallDockerDesktop",
+                        "inline": [
+                            "$hasPackageManager = Get-AppPackage -name 'Microsoft.DesktopAppInstaller'
+
+if(!$hasPackageManager)
+{
+    # download
+    Invoke-WebRequest -Uri https://aka.ms/Microsoft.VCLibs.x64.14.00.Desktop.appx -OutFile 'Microsoft.VCLibs.x64.14.00.Desktop.appx' -UseBasicParsing
+    
+    Add-AppxPackage -Path 'Microsoft.VCLibs.x64.14.00.Desktop.appx'
+
+    $releases_url = 'https://api.github.com/repos/microsoft/winget-cli/releases/latest'
+
+    [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+    $releases = Invoke-RestMethod -uri $releases_url
+    $latestRelease = $releases.assets | Where { $_.browser_download_url.EndsWith('msixbundle') } | Select -First 1
+
+    Invoke-WebRequest -Uri $($latestRelease.browser_download_url) -OutFile 'Microsoft.DesktopAppInstaller.msixbundle' -UseBasicParsing
+
+    Add-AppxPackage -Path 'Microsoft.DesktopAppInstaller.msixbundle'
+
+    # delete file
+    Remove-Item 'Microsoft.DesktopAppInstaller.msixbundle'
+    Remove-Item 'Microsoft.VCLibs.x64.14.00.Desktop.appx'
+}"
+                        ],
+                        "runElevated": true
+                    },
+                    {
+                        "type": "WindowsRestart",
+                        "restartCommand": "shutdown /r /f /t 0",
+                        "restartCheckCommand": "echo Azure-Image-Builder-Restarted-the-VM > c:\\buildArtifacts\\azureImageBuilderRestart.txt",
+                        "restartTimeout": "5m"
+
+                    },
+                    {
+                        "type": "PowerShell",
+                        "name": "InstallDockerDesktop",
+                        "inline": [
+                            "winget install Docker.DockerDesktop -h",
+                            "echo DockerDesktop-Installed >> c:\\buildArtifacts\\customize.txt"
+                        ],
+                        "runElevated": true
+                    },
+                    {
+                        "type": "WindowsRestart",
+                        "restartCommand": "shutdown /r /f /t 0",
+                        "restartCheckCommand": "echo Azure-Image-Builder-Restarted-the-VM > c:\\buildArtifacts\\azureImageBuilderRestart.txt",
+                        "restartTimeout": "5m"
+
+                    },
+                    {
+                        "type": "PowerShell",
+                        "name": "InstallNotepadplusplus",
+                        "inline": [
+                            "winget install Notepad++.Notepad++ -h",
+                            "echo NotepadPlusPlus-Installed >> c:\\buildArtifacts\\customize.txt"
+                        ],
+                        "runElevated": true
+                    },
+                    {
+                        "type": "WindowsRestart",
+                        "restartCommand": "shutdown /r /f /t 0",
+                        "restartCheckCommand": "echo Azure-Image-Builder-Restarted-the-VM > c:\\buildArtifacts\\azureImageBuilderRestart.txt",
+                        "restartTimeout": "5m"
+
+                    },
+                    {
+                        "type": "PowerShell",
+                        "name": "InstallSSMS",
+                        "inline": [
+                            "winget install Microsoft.SQLServerManagementStudio -h",
+                            "echo SSMS-Installed >> c:\\buildArtifacts\\customize.txt"
+                        ],
+                        "runElevated": true
+                    },
+                    {
+                        "type": "WindowsRestart",
+                        "restartCommand": "shutdown /r /f /t 0",
+                        "restartCheckCommand": "echo Azure-Image-Builder-Restarted-the-VM > c:\\buildArtifacts\\azureImageBuilderRestart.txt",
+                        "restartTimeout": "5m"
+
+                    },
+                    {
+                        "type": "WindowsUpdate",
+                        "filters": [
+                            "exclude:$_.Title -like '*Preview*'",
+                            "include:$true"
+                        ],
+                        "searchCriteria": "IsInstalled=0",
+                        "updateLimit": 20
+                    },
+                    {
+                        "type": "WindowsRestart",
+                        "restartCommand": "shutdown /r /f /t 0",
+                        "restartCheckCommand": "echo Azure-Image-Builder-Restarted-the-VM > c:\\buildArtifacts\\azureImageBuilderRestart.txt",
+                        "restartTimeout": "5m"
+
+                    }
+
+                ],
+                "distribute": [
+                    {
+                        "type": "SharedImage",
+                        "galleryImageId": "[parameters('galleryID')]",
+                        "location": "eastus",
+                        "imageId": "[parameters('galleryimageId')]",
+                        "runOutputName": "runOutputSharedImage",
+                        "replicationRegions": [
+                            "eastus"
+                        ],
+                        "artifactTags": {
+                            "base_image_publisher": "[parameters('publisher')]",
+                            "base_image_offer": "[parameters('offer')]",
+                            "base_image_sku": "[parameters('sku')]"
+                        }
+                    }
+                ]
+            }
+        }
+
+    ]
+}
