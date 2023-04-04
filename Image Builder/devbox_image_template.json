@@ -72,7 +72,7 @@
                         "type": "PowerShell",
                         "name": "createbuildfolder",
                         "runElevated": true,
-                        "scriptUri": "https://raw.githubusercontent.com/sbalke/Devbox-Azure-Image/main/Image%20Builder/createArtifactFolder.ps1"
+                        "scriptUri": "https://raw.githubusercontent.com/sbalke/Devbox-Azure-Image/main/Image%20Builder/createArtifactsFolder.ps1"
                     },
                     {
                         "type": "PowerShell",
