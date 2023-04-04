@@ -70,33 +70,15 @@
                 "customize": [
                     {
                         "type": "PowerShell",
-                        "name": "InstallDockerDesktop",
-                        "inline": [
-                            "$hasPackageManager = Get-AppPackage -name 'Microsoft.DesktopAppInstaller'
-
-if(!$hasPackageManager)
-{
-    # download
-    Invoke-WebRequest -Uri https://aka.ms/Microsoft.VCLibs.x64.14.00.Desktop.appx -OutFile 'Microsoft.VCLibs.x64.14.00.Desktop.appx' -UseBasicParsing
-    
-    Add-AppxPackage -Path 'Microsoft.VCLibs.x64.14.00.Desktop.appx'
-
-    $releases_url = 'https://api.github.com/repos/microsoft/winget-cli/releases/latest'
-
-    [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-    $releases = Invoke-RestMethod -uri $releases_url
-    $latestRelease = $releases.assets | Where { $_.browser_download_url.EndsWith('msixbundle') } | Select -First 1
-
-    Invoke-WebRequest -Uri $($latestRelease.browser_download_url) -OutFile 'Microsoft.DesktopAppInstaller.msixbundle' -UseBasicParsing
-
-    Add-AppxPackage -Path 'Microsoft.DesktopAppInstaller.msixbundle'
-
-    # delete file
-    Remove-Item 'Microsoft.DesktopAppInstaller.msixbundle'
-    Remove-Item 'Microsoft.VCLibs.x64.14.00.Desktop.appx'
-}"
-                        ],
-                        "runElevated": true
+                        "name": "createbuildfolder",
+                        "runElevated": true,
+                        "scriptUri": "https://raw.githubusercontent.com/sbalke/Devbox-Azure-Image/main/Image%20Builder/createArtifactFolder.ps1"
+                    },
+                    {
+                        "type": "PowerShell",
+                        "name": "InstallWinget",
+                        "runElevated": true,
+                        "scriptUri": "https://raw.githubusercontent.com/sbalke/Devbox-Azure-Image/main/Image%20Builder/installwinget.ps1"
                     },
                     {
                         "type": "WindowsRestart",
@@ -108,10 +90,7 @@ if(!$hasPackageManager)
                     {
                         "type": "PowerShell",
                         "name": "InstallDockerDesktop",
-                        "inline": [
-                            "winget install Docker.DockerDesktop -h",
-                            "echo DockerDesktop-Installed >> c:\\buildArtifacts\\customize.txt"
-                        ],
+                        "scriptUri": "https://raw.githubusercontent.com/sbalke/Devbox-Azure-Image/main/Image%20Builder/installDocker.ps1",
                         "runElevated": true
                     },
                     {
@@ -124,10 +103,7 @@ if(!$hasPackageManager)
                     {
                         "type": "PowerShell",
                         "name": "InstallNotepadplusplus",
-                        "inline": [
-                            "winget install Notepad++.Notepad++ -h",
-                            "echo NotepadPlusPlus-Installed >> c:\\buildArtifacts\\customize.txt"
-                        ],
+                        "scriptUri": "https://raw.githubusercontent.com/sbalke/Devbox-Azure-Image/main/Image%20Builder/installNotepadplusplus.ps1",
                         "runElevated": true
                     },
                     {
@@ -140,10 +116,7 @@ if(!$hasPackageManager)
                     {
                         "type": "PowerShell",
                         "name": "InstallSSMS",
-                        "inline": [
-                            "winget install Microsoft.SQLServerManagementStudio -h",
-                            "echo SSMS-Installed >> c:\\buildArtifacts\\customize.txt"
-                        ],
+                        "scriptUri": "https://raw.githubusercontent.com/sbalke/Devbox-Azure-Image/main/Image%20Builder/installSSMS.ps1",
                         "runElevated": true
                     },
                     {
