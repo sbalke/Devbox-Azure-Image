@@ -47,6 +47,9 @@
             "dependsOn": [
             ],
             "tags": {
+                "Publisher": "[parameters('publisher')]",
+                "Offer": "[parameters('offer')]",
+                "Sku": "[parameters('sku')]"
             },
             "identity": {
                 "type": "UserAssigned",

@@ -1,4 +1,7 @@
+Start-Transcript -Path "C:\buildartifacts\installwinget.log"
+
 $hasPackageManager = Get-AppPackage -name 'Microsoft.DesktopAppInstaller'
+
 
 if(!$hasPackageManager)
 {
@@ -21,3 +24,5 @@ if(!$hasPackageManager)
     Remove-Item 'Microsoft.DesktopAppInstaller.msixbundle'
     Remove-Item 'Microsoft.VCLibs.x64.14.00.Desktop.appx'
 }
+
+Stop-Transcript
