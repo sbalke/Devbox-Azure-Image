@@ -74,78 +74,22 @@
                     {
                         "type": "PowerShell",
                         "name": "createbuildfolder",
-                        "runElevated": true,
+                        "runElevated": false,
                         "scriptUri": "https://raw.githubusercontent.com/sbalke/Devbox-Azure-Image/main/Image%20Builder/createArtifactsFolder.ps1"
                     },
                     {
                         "type": "PowerShell",
                         "name": "InstallWinget",
-                        "runElevated": true,
+                        "runElevated": false,
                         "scriptUri": "https://raw.githubusercontent.com/sbalke/Devbox-Azure-Image/main/Image%20Builder/installwinget.ps1"
                     },
                     {
-                        "type": "WindowsRestart",
-                        "restartCommand": "shutdown /r /f /t 0",
-                        "restartCheckCommand": "echo Azure-Image-Builder-Restarted-the-VM > c:\\buildArtifacts\\azureImageBuilderRestart.txt",
-                        "restartTimeout": "5m"
-
-                    },
-                    {
                         "type": "PowerShell",
-                        "name": "InstallDockerDesktop",
+                        "name": "InstallDocker",
+                        "runElevated": true,
                         "scriptUri": "https://raw.githubusercontent.com/sbalke/Devbox-Azure-Image/main/Image%20Builder/installDocker.ps1",
-                        "runElevated": true
-                    },
-                    {
-                        "type": "WindowsRestart",
-                        "restartCommand": "shutdown /r /f /t 0",
-                        "restartCheckCommand": "echo Azure-Image-Builder-Restarted-the-VM > c:\\buildArtifacts\\azureImageBuilderRestart.txt",
-                        "restartTimeout": "5m"
-
-                    },
-                    {
-                        "type": "PowerShell",
-                        "name": "InstallNotepadplusplus",
-                        "scriptUri": "https://raw.githubusercontent.com/sbalke/Devbox-Azure-Image/main/Image%20Builder/installNotepadplusplus.ps1",
-                        "runElevated": true
-                    },
-                    {
-                        "type": "WindowsRestart",
-                        "restartCommand": "shutdown /r /f /t 0",
-                        "restartCheckCommand": "echo Azure-Image-Builder-Restarted-the-VM > c:\\buildArtifacts\\azureImageBuilderRestart.txt",
-                        "restartTimeout": "5m"
-
-                    },
-                    {
-                        "type": "PowerShell",
-                        "name": "InstallSSMS",
-                        "scriptUri": "https://raw.githubusercontent.com/sbalke/Devbox-Azure-Image/main/Image%20Builder/installSSMS.ps1",
-                        "runElevated": true
-                    },
-                    {
-                        "type": "WindowsRestart",
-                        "restartCommand": "shutdown /r /f /t 0",
-                        "restartCheckCommand": "echo Azure-Image-Builder-Restarted-the-VM > c:\\buildArtifacts\\azureImageBuilderRestart.txt",
-                        "restartTimeout": "5m"
-
-                    },
-                    {
-                        "type": "WindowsUpdate",
-                        "filters": [
-                            "exclude:$_.Title -like '*Preview*'",
-                            "include:$true"
-                        ],
-                        "searchCriteria": "IsInstalled=0",
-                        "updateLimit": 20
-                    },
-                    {
-                        "type": "WindowsRestart",
-                        "restartCommand": "shutdown /r /f /t 0",
-                        "restartCheckCommand": "echo Azure-Image-Builder-Restarted-the-VM > c:\\buildArtifacts\\azureImageBuilderRestart.txt",
-                        "restartTimeout": "5m"
-
+                        "sha256Checksum": "d8859e22df2bb1a877562506dc01046dfd97ee112213788a1f0a3019edd4497c"
                     }
-
                 ],
                 "distribute": [
                     {
