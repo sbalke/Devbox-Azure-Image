@@ -1,3 +1,5 @@
-wsl --install
-winget install Docker.DockerDesktop -h --disable-interactivity --accept-package-agreements --accept-source-agreements
-echo DockerDesktop-Installed > c:\\buildArtifacts\\customize.txt
+Start-Transcript -Path "C:\buildartifacts\installdocker.log"
+
+winget install Docker.DockerDesktop --silent --source winget --accept-package-agreements --accept-source-agreements
+
+Stop-Transcript
