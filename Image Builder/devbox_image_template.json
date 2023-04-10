@@ -74,78 +74,42 @@
                     {
                         "type": "PowerShell",
                         "name": "createbuildfolder",
-                        "runElevated": true,
+                        "runElevated": false,
                         "scriptUri": "https://raw.githubusercontent.com/sbalke/Devbox-Azure-Image/main/Image%20Builder/createArtifactsFolder.ps1"
                     },
                     {
                         "type": "PowerShell",
-                        "name": "InstallWinget",
-                        "runElevated": true,
-                        "scriptUri": "https://raw.githubusercontent.com/sbalke/Devbox-Azure-Image/main/Image%20Builder/installwinget.ps1"
+                        "name": "Install Choco and Software",
+                        "inline": [
+                            "Start-Transcript -Path \"C:\\buildartifacts\\choco.log\"",
+                            "Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))",
+                            "choco install -y sql-server-management-studio",
+                            "choco install -y notepadplusplus",
+                            "choco install -y docker-desktop",
+                            "Stop-Transcript"
+                        ]
                     },
                     {
                         "type": "WindowsRestart",
                         "restartCommand": "shutdown /r /f /t 0",
-                        "restartCheckCommand": "echo Azure-Image-Builder-Restarted-the-VM > c:\\buildArtifacts\\azureImageBuilderRestart.txt",
+                        "restartCheckCommand": "echo Azure-Image-Builder-Restarted-the-VM  > c:\\buildArtifacts\\azureImageBuilderRestart.txt",
                         "restartTimeout": "5m"
-
-                    },
-                    {
-                        "type": "PowerShell",
-                        "name": "InstallDockerDesktop",
-                        "scriptUri": "https://raw.githubusercontent.com/sbalke/Devbox-Azure-Image/main/Image%20Builder/installDocker.ps1",
-                        "runElevated": true
-                    },
-                    {
-                        "type": "WindowsRestart",
-                        "restartCommand": "shutdown /r /f /t 0",
-                        "restartCheckCommand": "echo Azure-Image-Builder-Restarted-the-VM > c:\\buildArtifacts\\azureImageBuilderRestart.txt",
-                        "restartTimeout": "5m"
-
-                    },
-                    {
-                        "type": "PowerShell",
-                        "name": "InstallNotepadplusplus",
-                        "scriptUri": "https://raw.githubusercontent.com/sbalke/Devbox-Azure-Image/main/Image%20Builder/installNotepadplusplus.ps1",
-                        "runElevated": true
-                    },
-                    {
-                        "type": "WindowsRestart",
-                        "restartCommand": "shutdown /r /f /t 0",
-                        "restartCheckCommand": "echo Azure-Image-Builder-Restarted-the-VM > c:\\buildArtifacts\\azureImageBuilderRestart.txt",
-                        "restartTimeout": "5m"
-
-                    },
-                    {
-                        "type": "PowerShell",
-                        "name": "InstallSSMS",
-                        "scriptUri": "https://raw.githubusercontent.com/sbalke/Devbox-Azure-Image/main/Image%20Builder/installSSMS.ps1",
-                        "runElevated": true
-                    },
-                    {
-                        "type": "WindowsRestart",
-                        "restartCommand": "shutdown /r /f /t 0",
-                        "restartCheckCommand": "echo Azure-Image-Builder-Restarted-the-VM > c:\\buildArtifacts\\azureImageBuilderRestart.txt",
-                        "restartTimeout": "5m"
-
                     },
                     {
                         "type": "WindowsUpdate",
+                        "searchCriteria": "IsInstalled=0",
                         "filters": [
                             "exclude:$_.Title -like '*Preview*'",
                             "include:$true"
                         ],
-                        "searchCriteria": "IsInstalled=0",
                         "updateLimit": 20
                     },
                     {
                         "type": "WindowsRestart",
                         "restartCommand": "shutdown /r /f /t 0",
-                        "restartCheckCommand": "echo Azure-Image-Builder-Restarted-the-VM > c:\\buildArtifacts\\azureImageBuilderRestart.txt",
+                        "restartCheckCommand": "echo Azure-Image-Builder-Restarted-the-VM  > c:\\buildArtifacts\\azureImageBuilderRestart.txt",
                         "restartTimeout": "5m"
-
                     }
-
                 ],
                 "distribute": [
                     {
