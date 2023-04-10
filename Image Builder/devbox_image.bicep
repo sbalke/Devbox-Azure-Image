@@ -19,9 +19,9 @@ resource imageTemplate 'Microsoft.VirtualMachineImages/imageTemplates@2022-02-14
     } 
   }
   tags: {
-    Base_Image_Publisher: publisher
-    Base_Image_Offer: offer
-    Base_Image_SKU: sku
+    base_image_publisher: publisher
+    base_image_offer: offer
+    base_image_sku: sku
   }
   properties: {
     vmProfile: {
@@ -36,6 +36,11 @@ resource imageTemplate 'Microsoft.VirtualMachineImages/imageTemplates@2022-02-14
       version: version
     }
     customize: [
+      {
+        type       :'PowerShell'
+        name:'CreateBuildArtifacts'
+        scriptUri:'https://raw.githubusercontent.com/sbalke/Devbox-Azure-Image/main/Image%20Builder/createArtifactsFolder.ps1'
+      }
       {
         type: 'PowerShell'
         name: 'InstallWinget'
