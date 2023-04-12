@@ -42,6 +42,13 @@ resource imageTemplate 'Microsoft.VirtualMachineImages/imageTemplates@2022-02-14
       }
       {
         type: 'File'
+        destination: 'c:\\buildartifacts\\installchoco.ps1'
+        sourceUri: 'https://raw.githubusercontent.com/sbalke/Devbox-Azure-Image/main/Image%20Builder/installNotepadplusplus.ps1'
+        sha256Checksum: '3f3bb5460450b35a51a6b363c50508e07d3d4aae29486989ce72467ec9a6fc15'
+        name: 'cppychoco'
+      }
+      {
+        type: 'File'
         destination: 'c:\\buildartifacts\\installnotepadplusplus.ps1'
         sourceUri: 'https://raw.githubusercontent.com/sbalke/Devbox-Azure-Image/main/Image%20Builder/installNotepadplusplus.ps1'
         sha256Checksum: '231e4672239354dcc13b91337cd99806711246903cc1428b00e7a17fd6f57a8f'
@@ -62,10 +69,17 @@ resource imageTemplate 'Microsoft.VirtualMachineImages/imageTemplates@2022-02-14
         name: 'copyssms'
       }
       {
+        type: 'File'
+        destination: 'c:\\buildartifacts\\installwinget.ps1'
+        sourceUri: 'https://raw.githubusercontent.com/sbalke/Devbox-Azure-Image/main/Image%20Builder/installwinget.ps1'
+        sha256Checksum: '952fdefa834403233b7dab4d8882b8cec8b63e3f0830f081fa16cef14f87ed2e'
+        name: 'copywinget'
+      }
+      {
         type: 'PowerShell'
         name: 'Install'
         scriptUri: 'https://raw.githubusercontent.com/sbalke/Devbox-Azure-Image/main/Image%20Builder/install.ps1'
-        sha256Checksum: ''
+        sha256Checksum: '295313ab92ef100ab3569d1774c704b2b44a01bcc3122d5b344a5064e91365c3'
       }
     ]
     distribute: [
