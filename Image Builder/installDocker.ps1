@@ -1,5 +1,9 @@
 Start-Transcript -Path "C:\buildartifacts\installdocker.log"
 
-winget install Docker.DockerDesktop --silent --source winget --accept-package-agreements --accept-source-agreements
+if($useChoco) {
+    choco install -y docker-desktop
+} else {
+    winget install Docker.DockerDesktop --silent --source winget --accept-package-agreements --accept-source-agreements
+}
 
 Stop-Transcript

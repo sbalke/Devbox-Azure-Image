@@ -1,5 +1,8 @@
 Start-Transcript -Path "C:\buildartifacts\installwinget.log"
 
+$currentLocation = Get-Location
+Set-Location -Path \buildartifacts
+
 $hasPackageManager = Get-AppPackage -name 'Microsoft.DesktopAppInstaller'
 
 
@@ -32,4 +35,5 @@ if (!$hasPackageManager) {
     Remove-Item 'Microsoft.VCLibs.x64.14.00.Desktop.appx'
 }
 
+Set-Location -Path $currentLocation
 Stop-Transcript
