@@ -51,6 +51,7 @@ resource imageTemplate 'Microsoft.VirtualMachineImages/imageTemplates@2022-02-14
         name: 'InstallWinget'
         scriptUri: 'https://raw.githubusercontent.com/sbalke/Devbox-Azure-Image/main/Image%20Builder/installwinget.ps1'
         runElevated: true
+        sha256Checksum: '582437191fa24aa0e126dac3faba7195bddaf167658710f0ddbd44b3af9f44b6'
       }
       {
         type: 'WindowsRestart'
@@ -61,6 +62,7 @@ resource imageTemplate 'Microsoft.VirtualMachineImages/imageTemplates@2022-02-14
         name:'InstallNotepad'
         scriptUri: 'https://raw.githubusercontent.com/sbalke/Devbox-Azure-Image/main/Image%20Builder/installNotepadplusplus.ps1'
         runElevated: true
+        sha256Checksum: 'b498b2e101ca2a93729d0dedd05e5a3935d9cb7e5e09a7613ad9025d3927672b'
       }
     ]
     distribute: [
@@ -78,6 +80,6 @@ resource imageTemplate 'Microsoft.VirtualMachineImages/imageTemplates@2022-02-14
         }
       }
     ]
-    buildTimeoutInMinutes: 120
+    buildTimeoutInMinutes: 240
   }
 }
