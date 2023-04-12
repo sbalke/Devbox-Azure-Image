@@ -3,19 +3,19 @@
   "contentVersion": "1.0.0.0",
   "parameters": {
     "publisher": {
-      "value": "MicrosoftWindowsDesktop"
+      "value": "microsoftvisualstudio"
     },
     "offer": {
-      "value": "Windows-11"
+      "value": "visualstudioplustools"
     },
     "sku": {
-      "value": "win11-21h2-ent"
+      "value": "vs-2022-pro-general-win11-m365-gen2"
     },
     "version": {
       "value": "latest"
     },
     "galleryImageId": {
-      "value": "/subscriptions/1c3e9cd3-5139-4478-b55b-8c632168518e/resourceGroups/DevBoxes/providers/Microsoft.Compute/galleries/DevBox_Compute_Gallery/images/Win11_VS2022Pro_Docker_SSMS_AIB/versions/0.0.1"
+      "value": "/subscriptions/1c3e9cd3-5139-4478-b55b-8c632168518e/resourceGroups/DevBoxes/providers/Microsoft.Compute/galleries/DevBox_Compute_Gallery/images/Win11_VS2022_Docker/"
     }
   }
 }

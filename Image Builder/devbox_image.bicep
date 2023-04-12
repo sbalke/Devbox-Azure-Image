@@ -45,6 +45,17 @@ resource imageTemplate 'Microsoft.VirtualMachineImages/imageTemplates@2022-02-14
         type: 'PowerShell'
         name: 'InstallWinget'
         scriptUri: 'https://raw.githubusercontent.com/sbalke/Devbox-Azure-Image/main/Image%20Builder/installwinget.ps1'
+        runElevated: true
+      }
+      {
+        type: 'WindowsRestart'
+        name: 'Restart Windows'
+      }
+      {
+        type:'PowerShell'
+        name:'InstallNotepad'
+        scriptUri: 'https://raw.githubusercontent.com/sbalke/Devbox-Azure-Image/main/Image%20Builder/installNotepadplusplus.ps1'
+        runElevated: true
       }
     ]
     distribute: [
