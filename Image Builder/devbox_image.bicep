@@ -44,21 +44,21 @@ resource imageTemplate 'Microsoft.VirtualMachineImages/imageTemplates@2022-02-14
         type: 'File'
         destination: 'c:\\buildartifacts\\installnotepadplusplus.ps1'
         sourceUri: 'https://raw.githubusercontent.com/sbalke/Devbox-Azure-Image/main/Image%20Builder/installNotepadplusplus.ps1'
-        sha256Checksum: 'b498b2e101ca2a93729d0dedd05e5a3935d9cb7e5e09a7613ad9025d3927672b'
+        sha256Checksum: '231e4672239354dcc13b91337cd99806711246903cc1428b00e7a17fd6f57a8f'
         name: 'cppynpp'
       }
       {
         type: 'File'
         destination: 'c:\\buildartifacts\\installDocker.ps1'
         sourceUri: 'https://raw.githubusercontent.com/sbalke/Devbox-Azure-Image/main/Image%20Builder/installDocker.ps1'
-        sha256Checksum: '150939b13f8318c2a2d5ac16a81c73e4293ed325493e3fcb9d19354172c744ad'
+        sha256Checksum: 'aabc63d2f2fb8e4c617498b65c4de50692241edcc12ab03348d5cb952eb6d457'
         name: 'copydocker'
       }
       {
         type: 'File'
         destination: 'c:\\buildartifacts\\installSSMS.ps1'
         sourceUri: 'https://raw.githubusercontent.com/sbalke/Devbox-Azure-Image/main/Image%20Builder/installSSMS.ps1'
-        sha256Checksum: '150939b13f8318c2a2d5ac16a81c73e4293ed325493e3fcb9d19354172c744ad'
+        sha256Checksum: '243ea3fdb1c14fe85c05391e95717d94613a4582e33fc4432055d690771d3e29'
         name: 'copyssms'
       }
       {
