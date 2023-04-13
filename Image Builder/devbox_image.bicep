@@ -71,10 +71,37 @@ resource imageTemplate 'Microsoft.VirtualMachineImages/imageTemplates@2022-02-14
         name: 'copywinget'
       }
       {
+        type: 'File'
+        destination: 'c:\\buildartifacts\\fixsysprep.ps1'
+        sourceUri: 'https://raw.githubusercontent.com/sbalke/Devbox-Azure-Image/main/Image%20Builder/fixsysprep.ps1'
+        name: 'copywinget'
+      }
+      {
         type: 'PowerShell'
         name: 'Install'
         scriptUri: 'https://raw.githubusercontent.com/sbalke/Devbox-Azure-Image/main/Image%20Builder/install.ps1'
         runElevated: true
+        runAsSystem: true
+      }
+      {
+        type: 'WindowsRestart'
+        name: 'afterinstallsrestart'
+      }
+      {
+        type: 'PowerShell'
+        name: 'fixsysprep'
+        scriptUri: 'https://raw.githubusercontent.com/sbalke/Devbox-Azure-Image/main/Image%20Builder/fixsysprep.ps1'
+        runElevated: true
+        runAsSystem: true
+      }
+      {
+        type: 'WindowsUpdate'
+        searchCriteria: 'IsInstalled=0'
+        filters: [
+          'exclude:%_.Title -like \'*Preview*\''
+          'include: $true'
+        ]
+        updateLimit: 40
       }
     ]
     distribute: [
