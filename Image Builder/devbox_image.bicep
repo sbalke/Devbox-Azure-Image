@@ -8,6 +8,25 @@ param version string //= 'latest'
 param galleryImageId string //= '/subscriptions/1c3e9cd3-5139-4478-b55b-8c632168518e/resourceGroups/DevBoxes/providers/Microsoft.Compute/galleries/DevBox_Compute_Gallery/images/Win11_VS2022Pro_Docker_SSMS_AIB/versions/0.0.1'
 //param resourceGroup string = 'DevBoxes'
 
+resource gallery 'Microsoft.Compute/galleries@2022-03-03' = {
+  name: resourceGroup().name
+  location: location
+
+  resource image 'images' = {
+    name: 'Test'
+    location: location
+    properties: {
+      osType: 'Windows'
+      identifier: {
+        offer: 'Windows11'
+        publisher: 'Etchasoft'
+        sku: 'Win11-VS-SSMS'
+      }
+      osState: 'Generalized'
+    }
+  }
+}
+
 resource imageTemplate 'Microsoft.VirtualMachineImages/imageTemplates@2022-02-14' = {
   name: 'AIB_Devbox'
   location: location
@@ -107,10 +126,10 @@ resource imageTemplate 'Microsoft.VirtualMachineImages/imageTemplates@2022-02-14
     distribute: [
       {
         type: 'SharedImage'
-        galleryImageId: galleryImageId
+        galleryImageId: gallery::image.id
         runOutputName: 'runOutputSharedImage'
         replicationRegions: [
-          'eastus'
+          location
         ]
         artifactTags: {
           base_image_publisher: publisher
@@ -122,3 +141,5 @@ resource imageTemplate 'Microsoft.VirtualMachineImages/imageTemplates@2022-02-14
     buildTimeoutInMinutes: 240
   }
 }
+
+output imageId string = gallery::image.id
