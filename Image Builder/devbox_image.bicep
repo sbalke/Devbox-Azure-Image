@@ -35,6 +35,15 @@ resource imageTemplate 'Microsoft.VirtualMachineImages/imageTemplates@2022-02-14
       version: version
     }
     customize: [
+//      {
+//        type: 'WindowsUpdate'
+//        searchCriteria: 'IsInstalled=0'
+//        filters: [
+//          'exclude:%_.Title -like \'*Preview*\''
+//          'include: $true'
+//        ]
+//        updateLimit: 40
+//      }
       {
         type: 'PowerShell'
         name: 'CreateBuildArtifacts'
@@ -93,15 +102,6 @@ resource imageTemplate 'Microsoft.VirtualMachineImages/imageTemplates@2022-02-14
         scriptUri: 'https://raw.githubusercontent.com/sbalke/Devbox-Azure-Image/main/Image%20Builder/fixsysprep.ps1'
         runElevated: true
         runAsSystem: true
-      }
-      {
-        type: 'WindowsUpdate'
-        searchCriteria: 'IsInstalled=0'
-        filters: [
-          'exclude:%_.Title -like \'*Preview*\''
-          'include: $true'
-        ]
-        updateLimit: 40
       }
     ]
     distribute: [
