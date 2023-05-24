@@ -9,11 +9,11 @@ param galleryImageId string //= '/subscriptions/1c3e9cd3-5139-4478-b55b-8c632168
 //param resourceGroup string = 'DevBoxes'
 
 resource gallery 'Microsoft.Compute/galleries@2022-03-03' = {
-  name: resourceGroup().name
+  name: 'DevBox_Compute_Gallery'
   location: location
 
   resource image 'images' = {
-    name: 'Test'
+    name: 'Win11_VS2022_SSMS'
     location: location
     properties: {
       osType: 'Windows'
@@ -23,6 +23,7 @@ resource gallery 'Microsoft.Compute/galleries@2022-03-03' = {
         sku: 'Win11-VS-SSMS'
       }
       osState: 'Generalized'
+      hyperVGeneration: 'V2'
     }
   }
 }
@@ -43,7 +44,7 @@ resource imageTemplate 'Microsoft.VirtualMachineImages/imageTemplates@2022-02-14
   }
   properties: {
     vmProfile: {
-      vmSize: 'Standard_DS1_v2'
+      vmSize: 'Standard_DS2_v2'
       osDiskSizeGB: 128
     }
     source: {
