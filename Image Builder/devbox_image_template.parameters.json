@@ -17,8 +17,11 @@
         "galleryID": {
             "value": "/subscriptions/1c3e9cd3-5139-4478-b55b-8c632168518e/resourceGroups/DevBoxes/providers/Microsoft.Compute/galleries/DevBox_Compute_Gallery/images/Win11_VS2022Pro_Docker_SSMS_AIB"
         },
-        "galleryimageID": {
-            "value": "/subscriptions/1c3e9cd3-5139-4478-b55b-8c632168518e/resourceGroups/DevBoxes/providers/Microsoft.Compute/galleries/DevBox_Compute_Gallery/images/Win11_VS2022Pro_Docker_SSMS_AIB/versions/0.0.2"
+        "galleryName": {
+            "value": "DevBox_Compute_Gallery"
+        },
+        "imageName": {
+            "value": "Win11_VS2022_SSMS"
         }
     }
 }

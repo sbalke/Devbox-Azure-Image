@@ -4,16 +4,15 @@ param publisher string //= 'microsoftvisualstudio'
 param offer string //= 'visualstudioplustools'
 param sku string //= 'vs-2022-pro-general-win11-m365-gen2'
 param version string //= 'latest'
-//param galleryId string = '/subscriptions/1c3e9cd3-5139-4478-b55b-8c632168518e/resourceGroups/DevBoxes/providers/Microsoft.Compute/galleries/DevBox_Compute_Gallery/images/Win11_VS2022Pro_Docker_SSMS_AIB'
-param galleryImageId string //= '/subscriptions/1c3e9cd3-5139-4478-b55b-8c632168518e/resourceGroups/DevBoxes/providers/Microsoft.Compute/galleries/DevBox_Compute_Gallery/images/Win11_VS2022Pro_Docker_SSMS_AIB/versions/0.0.1'
-//param resourceGroup string = 'DevBoxes'
+param imageName string 
+param galleryName string
+param installName string
 
 resource gallery 'Microsoft.Compute/galleries@2022-03-03' = {
-  name: 'DevBox_Compute_Gallery'
+  name: galleryName
   location: location
-
-  resource image 'images' = {
-    name: 'Win11_VS2022_SSMS'
+  resource image 'images@2022-03-03' = {
+    name: imageName
     location: location
     properties: {
       osType: 'Windows'
@@ -24,6 +23,23 @@ resource gallery 'Microsoft.Compute/galleries@2022-03-03' = {
       }
       osState: 'Generalized'
       hyperVGeneration: 'V2'
+      features: [
+        {
+          name: 'SecurityType'
+          value: 'TrustedLaunchSupported'
+        }
+      ]
+      recommended: {
+        vCPUs: {
+          min: 4
+          max: 16
+        }
+        memory: {
+          min: 8
+          max: 64
+        }
+      }
+      architecture: 'x64'
     }
   }
 }
@@ -100,15 +116,9 @@ resource imageTemplate 'Microsoft.VirtualMachineImages/imageTemplates@2022-02-14
         name: 'copywinget'
       }
       {
-        type: 'File'
-        destination: 'c:\\buildartifacts\\fixsysprep.ps1'
-        sourceUri: 'https://raw.githubusercontent.com/sbalke/Devbox-Azure-Image/main/Image%20Builder/fixsysprep.ps1'
-        name: 'copywinget'
-      }
-      {
         type: 'PowerShell'
         name: 'Install'
-        scriptUri: 'https://raw.githubusercontent.com/sbalke/Devbox-Azure-Image/main/Image%20Builder/install.ps1'
+        scriptUri: installName
         runElevated: true
         runAsSystem: true
       }
