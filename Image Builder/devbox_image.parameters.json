@@ -20,8 +20,8 @@
     "imageName": {
       "value": "Win11_VS2022_SSMS"
     },
-    "installName": {
-      "value": "https://raw.githubusercontent.com/sbalke/Devbox-Azure-Image/main/Image%20Builder/install.ps1"
+    "name": {
+      "value": "Neach"
     }
   }
 }

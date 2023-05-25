@@ -1,25 +1,27 @@
 @description('Specifies the location for resources.')
-param location string = resourceGroup().location
 param publisher string //= 'microsoftvisualstudio'
 param offer string //= 'visualstudioplustools'
 param sku string //= 'vs-2022-pro-general-win11-m365-gen2'
 param version string //= 'latest'
-param imageName string 
 param galleryName string
-param installName string
+param name string
+
+var urlBase = 'https://raw.githubusercontent.com/sbalke/Devbox-Azure-Image/main/Image%20Builder/'
+var installName = '${urlBase}${name}.ps1'
+var location = resourceGroup().location
 
 resource gallery 'Microsoft.Compute/galleries@2022-03-03' = {
   name: galleryName
   location: location
   resource image 'images@2022-03-03' = {
-    name: imageName
+    name: '${name}Image'
     location: location
     properties: {
       osType: 'Windows'
       identifier: {
         offer: 'Windows11'
         publisher: 'Etchasoft'
-        sku: 'Win11-VS-SSMS'
+        sku: '${name}_Win11-VS-SSMS'
       }
       osState: 'Generalized'
       hyperVGeneration: 'V2'
@@ -83,36 +85,36 @@ resource imageTemplate 'Microsoft.VirtualMachineImages/imageTemplates@2022-02-14
       {
         type: 'PowerShell'
         name: 'CreateBuildArtifacts'
-        scriptUri: 'https://raw.githubusercontent.com/sbalke/Devbox-Azure-Image/main/Image%20Builder/createArtifactsFolder.ps1'
+        scriptUri: '${urlBase}createArtifactsFolder.ps1'
       }
       {
         type: 'File'
         destination: 'c:\\buildartifacts\\installchoco.ps1'
-        sourceUri: 'https://raw.githubusercontent.com/sbalke/Devbox-Azure-Image/main/Image%20Builder/installchoco.ps1'
+        sourceUri: '${urlBase}installchoco.ps1'
         name: 'cppychoco'
       }
       {
         type: 'File'
         destination: 'c:\\buildartifacts\\installnotepadplusplus.ps1'
-        sourceUri: 'https://raw.githubusercontent.com/sbalke/Devbox-Azure-Image/main/Image%20Builder/installNotepadplusplus.ps1'
+        sourceUri: '${urlBase}installNotepadplusplus.ps1'
         name: 'cppynpp'
       }
       {
         type: 'File'
         destination: 'c:\\buildartifacts\\installDocker.ps1'
-        sourceUri: 'https://raw.githubusercontent.com/sbalke/Devbox-Azure-Image/main/Image%20Builder/installDocker.ps1'
+        sourceUri: '${urlBase}installDocker.ps1'
         name: 'copydocker'
       }
       {
         type: 'File'
         destination: 'c:\\buildartifacts\\installSSMS.ps1'
-        sourceUri: 'https://raw.githubusercontent.com/sbalke/Devbox-Azure-Image/main/Image%20Builder/installSSMS.ps1'
+        sourceUri: '${urlBase}installSSMS.ps1'
         name: 'copyssms'
       }
       {
         type: 'File'
         destination: 'c:\\buildartifacts\\installwinget.ps1'
-        sourceUri: 'https://raw.githubusercontent.com/sbalke/Devbox-Azure-Image/main/Image%20Builder/installwinget.ps1'
+        sourceUri: '${urlBase}installwinget.ps1'
         name: 'copywinget'
       }
       {
@@ -129,7 +131,7 @@ resource imageTemplate 'Microsoft.VirtualMachineImages/imageTemplates@2022-02-14
       {
         type: 'PowerShell'
         name: 'fixsysprep'
-        scriptUri: 'https://raw.githubusercontent.com/sbalke/Devbox-Azure-Image/main/Image%20Builder/fixsysprep.ps1'
+        scriptUri: '${urlBase}fixsysprep.ps1'
         runElevated: true
         runAsSystem: true
       }
