@@ -7,7 +7,7 @@ param galleryName string
 param name string
 
 var urlBase = 'https://raw.githubusercontent.com/sbalke/Devbox-Azure-Image/main/Image%20Builder/'
-var installName = '${urlBase}${name}.ps1'
+var installName = '${urlBase}install${name}.ps1'
 var location = resourceGroup().location
 
 resource gallery 'Microsoft.Compute/galleries@2022-03-03' = {
@@ -47,7 +47,7 @@ resource gallery 'Microsoft.Compute/galleries@2022-03-03' = {
 }
 
 resource imageTemplate 'Microsoft.VirtualMachineImages/imageTemplates@2022-02-14' = {
-  name: 'AIB_Devbox'
+  name: '${name}_Devbox'
   location: location
   identity: {
     type: 'UserAssigned'
@@ -118,16 +118,22 @@ resource imageTemplate 'Microsoft.VirtualMachineImages/imageTemplates@2022-02-14
         name: 'copywinget'
       }
       {
-        type: 'PowerShell'
-        name: 'Install'
-        scriptUri: installName
-        runElevated: true
-        runAsSystem: true
+        type: 'File'
+        destination: 'c:\\buildartifacts\\installvscode.ps1'
+        sourceUri: '${urlBase}installvscode.ps1'
+        name: 'copyvscode'
       }
-      {
-        type: 'WindowsRestart'
-        name: 'afterinstallsrestart'
-      }
+//      {
+//        type: 'PowerShell'
+//        name: 'Install'
+//        scriptUri: installName
+//        runElevated: true
+//        runAsSystem: true
+//      }
+//      {
+//        type: 'WindowsRestart'
+//        name: 'afterinstallsrestart'
+//      }
       {
         type: 'PowerShell'
         name: 'fixsysprep'
@@ -140,7 +146,7 @@ resource imageTemplate 'Microsoft.VirtualMachineImages/imageTemplates@2022-02-14
       {
         type: 'SharedImage'
         galleryImageId: gallery::image.id
-        runOutputName: 'runOutputSharedImage'
+        runOutputName: '${name}SharedImage'
         replicationRegions: [
           location
         ]
