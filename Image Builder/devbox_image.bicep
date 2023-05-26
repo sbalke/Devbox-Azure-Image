@@ -123,13 +123,13 @@ resource imageTemplate 'Microsoft.VirtualMachineImages/imageTemplates@2022-02-14
         sourceUri: '${urlBase}installvscode.ps1'
         name: 'copyvscode'
       }
-//      {
-//        type: 'PowerShell'
-//        name: 'Install'
-//        scriptUri: installName
-//        runElevated: true
-//        runAsSystem: true
-//      }
+      {
+        type: 'PowerShell'
+        name: 'Install'
+        scriptUri: installName
+        runElevated: true
+        runAsSystem: true
+      }
 //      {
 //        type: 'WindowsRestart'
 //        name: 'afterinstallsrestart'
