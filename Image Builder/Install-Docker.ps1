@@ -1,4 +1,4 @@
-Start-Transcript -Path "C:\buildartifacts\installdocker.log"
+Start-Transcript -Path "installdocker.log"
 
 if($useChoco) {
     choco install -y docker-desktop
