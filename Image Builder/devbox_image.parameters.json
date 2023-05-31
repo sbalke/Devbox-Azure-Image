@@ -6,10 +6,10 @@
       "value": "MicrosoftWindowsDesktop"
     },
     "offer": {
-      "value": "Windows-11"
+      "value": "windows-ent-cpc"
     },
     "sku": {
-      "value": "win11-21h2-avd"
+      "value": "win11-22h2-ent-cpc-m365"
     },
     "version": {
       "value": "latest"

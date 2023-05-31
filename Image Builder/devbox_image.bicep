@@ -5,16 +5,16 @@ param sku string //= 'vs-2022-pro-general-win11-m365-gen2'
 param version string //= 'latest'
 param galleryName string
 param name string
+param location string = resourceGroup().location
 
-var urlBase = 'https://raw.githubusercontent.com/sbalke/Devbox-Azure-Image/main/Image%20Builder/'
-var installName = '${urlBase}install${name}.ps1'
-var location = resourceGroup().location
+var urlBase = 'https://raw.githubusercontent.com/sbalke/Devbox-Azure-Image/main/scripts/'
+var installName = '${urlBase}Install-${name}.ps1'
 
 resource gallery 'Microsoft.Compute/galleries@2022-03-03' = {
   name: galleryName
   location: location
   resource image 'images@2022-03-03' = {
-    name: '${name}Image'
+    name: '${name}-DevBox-Image'
     location: location
     properties: {
       osType: 'Windows'
@@ -85,43 +85,37 @@ resource imageTemplate 'Microsoft.VirtualMachineImages/imageTemplates@2022-02-14
       {
         type: 'PowerShell'
         name: 'CreateBuildArtifacts'
-        scriptUri: '${urlBase}createArtifactsFolder.ps1'
+        scriptUri: '${urlBase}Create-ArtifactsFolder.ps1'
       }
       {
         type: 'File'
-        destination: 'c:\\buildartifacts\\installchoco.ps1'
-        sourceUri: '${urlBase}installchoco.ps1'
-        name: 'cppychoco'
+        name: 'Copy Choco'
+        sourceUri: '${urlBase}Install-Chocolatey.ps1'
+        destination: 'C:\\BuildArtifacts\\Install-Chocolatey.ps1'
       }
       {
         type: 'File'
-        destination: 'c:\\buildartifacts\\installnotepadplusplus.ps1'
-        sourceUri: '${urlBase}installNotepadplusplus.ps1'
-        name: 'cppynpp'
+        name: 'Copy Git'
+        sourceUri: '${urlBase}Install-Git.ps1'
+        destination: 'C:\\BuildArtifacts\\Install-Git.ps1'
       }
       {
         type: 'File'
-        destination: 'c:\\buildartifacts\\installDocker.ps1'
-        sourceUri: '${urlBase}installDocker.ps1'
-        name: 'copydocker'
+        name: 'Copy SSMS'
+        sourceUri: '${urlBase}Install-SSMS.ps1'
+        destination: 'C:\\BuildArtifacts\\Install-SSMS.ps1'
+      }      
+      {
+        type: 'File'
+        name: 'Copy VS2022'
+        sourceUri: '${urlBase}Install-VS2022.ps1'
+        destination: 'C:\\BuildArtifacts\\Install-VS2022.ps1'
       }
       {
         type: 'File'
-        destination: 'c:\\buildartifacts\\installSSMS.ps1'
-        sourceUri: '${urlBase}installSSMS.ps1'
-        name: 'copyssms'
-      }
-      {
-        type: 'File'
-        destination: 'c:\\buildartifacts\\installwinget.ps1'
-        sourceUri: '${urlBase}installwinget.ps1'
-        name: 'copywinget'
-      }
-      {
-        type: 'File'
-        destination: 'c:\\buildartifacts\\installvscode.ps1'
-        sourceUri: '${urlBase}installvscode.ps1'
-        name: 'copyvscode'
+        name: 'Copy DotNet'
+        sourceUri: '${urlBase}Install-DotNet.ps1'
+        destination: 'C:\\BuildArtifacts\\Install-DotNet.ps1'
       }
       {
         type: 'PowerShell'
@@ -130,14 +124,10 @@ resource imageTemplate 'Microsoft.VirtualMachineImages/imageTemplates@2022-02-14
         runElevated: true
         runAsSystem: true
       }
-//      {
-//        type: 'WindowsRestart'
-//        name: 'afterinstallsrestart'
-//      }
       {
         type: 'PowerShell'
         name: 'fixsysprep'
-        scriptUri: '${urlBase}fixsysprep.ps1'
+        scriptUri: '${urlBase}Fis-Sysprep.ps1'
         runElevated: true
         runAsSystem: true
       }
