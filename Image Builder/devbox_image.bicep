@@ -118,6 +118,24 @@ resource imageTemplate 'Microsoft.VirtualMachineImages/imageTemplates@2022-02-14
         destination: 'C:\\BuildArtifacts\\Install-DotNet.ps1'
       }
       {
+        type: 'File'
+        name: 'Copy Set-Theme'
+        sourceUri: '${urlBase}Set-Theme.ps1'
+        destination: 'C:\\BuildArtifacts\\Set-Theme.ps1'
+      }
+      {
+        type: 'File'
+        name: 'Copy GitHubDesktop'
+        sourceUri: '${urlBase}Install-GitHubDesktop.ps1'
+        destination: 'C:\\BuildArtifacts\\Install-GitHubDesktop.ps1'
+      }      
+      {
+        type: 'File'
+        name: 'Copy GitHub-CLI'
+        sourceUri: '${urlBase}Install-GitHub-CLI.ps1'
+        destination: 'C:\\BuildArtifacts\\Install-GitHub-CLI.ps1'
+      }      
+      {
         type: 'PowerShell'
         name: 'Install'
         scriptUri: installName
