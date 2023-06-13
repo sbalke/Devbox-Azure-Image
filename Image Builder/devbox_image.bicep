@@ -127,7 +127,7 @@ resource imageTemplate 'Microsoft.VirtualMachineImages/imageTemplates@2022-02-14
       {
         type: 'PowerShell'
         name: 'fixsysprep'
-        scriptUri: '${urlBase}Fis-Sysprep.ps1'
+        scriptUri: '${urlBase}Fix-Sysprep.ps1'
         runElevated: true
         runAsSystem: true
       }
