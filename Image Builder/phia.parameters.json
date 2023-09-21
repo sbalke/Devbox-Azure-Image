@@ -3,13 +3,13 @@
   "contentVersion": "1.0.0.0",
   "parameters": {
     "publisher": {
-      "value": "microsoftwindowsdesktop"
+      "value": "microsoftvisualstudio"
     },
     "offer": {
-      "value": "windows-11"
+      "value": "visualstudioplustools"
     },
     "sku": {
-      "value": "win11-22h2-ent"
+      "value": "vs-2022-ent-general-win11-m365-gen2"
     },
     "version": {
       "value": "latest"

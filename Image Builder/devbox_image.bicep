@@ -55,6 +55,8 @@ resource imageTemplate 'Microsoft.VirtualMachineImages/imageTemplates@2022-02-14
       '/subscriptions/1c3e9cd3-5139-4478-b55b-8c632168518e/resourcegroups/DevBoxes/providers/Microsoft.ManagedIdentity/userAssignedIdentities/DevBox-ManagedID': {}
     }
   }
+  dependsOn: []
+
   tags: {
     base_image_publisher: publisher
     base_image_offer: offer
@@ -73,86 +75,66 @@ resource imageTemplate 'Microsoft.VirtualMachineImages/imageTemplates@2022-02-14
       version: version
     }
     customize: [
-//      {
-//        type: 'WindowsUpdate'
-//        searchCriteria: 'IsInstalled=0'
-//        filters: [
-//          'exclude:%_.Title -like \'*Preview*\''
-//          'include: $true'
-//        ]
-//        updateLimit: 40
-//      }
       {
         type: 'PowerShell'
-        name: 'CreateBuildArtifacts'
-        scriptUri: '${urlBase}Create-ArtifactsFolder.ps1'
-      }
-      {
-        type: 'File'
-        name: 'Copy Choco'
-        sourceUri: '${urlBase}Install-Chocolatey.ps1'
-        destination: 'C:\\BuildArtifacts\\Install-Chocolatey.ps1'
-      }
-      {
-        type: 'File'
-        name: 'Copy Git'
-        sourceUri: '${urlBase}Install-Git.ps1'
-        destination: 'C:\\BuildArtifacts\\Install-Git.ps1'
-      }
-      {
-        type: 'File'
-        name: 'Copy SSMS'
-        sourceUri: '${urlBase}Install-SSMS.ps1'
-        destination: 'C:\\BuildArtifacts\\Install-SSMS.ps1'
-      }      
-      {
-        type: 'File'
-        name: 'Copy VS2022'
-        sourceUri: '${urlBase}Install-VS2022.ps1'
-        destination: 'C:\\BuildArtifacts\\Install-VS2022.ps1'
-      }
-      {
-        type: 'File'
-        name: 'Copy DotNet'
-        sourceUri: '${urlBase}Install-DotNet.ps1'
-        destination: 'C:\\BuildArtifacts\\Install-DotNet.ps1'
-      }
-      {
-        type: 'File'
-        name: 'Copy Set-Theme'
-        sourceUri: '${urlBase}Set-Theme.ps1'
-        destination: 'C:\\BuildArtifacts\\Set-Theme.ps1'
-      }
-      {
-        type: 'File'
-        name: 'Copy GitHubDesktop'
-        sourceUri: '${urlBase}Install-GitHubDesktop.ps1'
-        destination: 'C:\\BuildArtifacts\\Install-GitHubDesktop.ps1'
-      }      
-      {
-        type: 'File'
-        name: 'Copy GitHub-CLI'
-        sourceUri: '${urlBase}Install-GitHub-CLI.ps1'
-        destination: 'C:\\BuildArtifacts\\Install-GitHub-CLI.ps1'
-      }      
-      {
-        type: 'PowerShell'
-        name: 'Install'
-        scriptUri: installName
-        runElevated: true
-        runAsSystem: true
+        name: 'Install Chocolatey'
+        inline: [
+          'Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString(\'https://chocolatey.org/install.ps1\'));'
+        ]
       }
       {
         type: 'PowerShell'
-        name: 'fixsysprep'
-        scriptUri: '${urlBase}Fix-Sysprep.ps1'
-        runElevated: true
-        runAsSystem: true
+        name: 'Install Docker-Desktop'
+        inline: [
+          'Set-ExecutionPolicy Bypass -Scope Process -Force;'
+          'choco install -y docker-desktop --version 4.23 --ia \'--quiet --accept-license\';'
+        ]
+      }
+      {
+        type: 'WindowsRestart'
+        name: 'Restart Computer'
+        restartTimeout: '10m'
+      }
+      {
+        type: 'PowerShell'
+        name: 'Install SQL Server Management Studio'
+        inline: [
+          'Set-ExecutionPolicy Bypass -Scope Process -Force;'
+          'choco install -y sql-server-management-studio --ia \'--quiet --accept-license\';'
+        ]
+      }
+      {
+        type: 'PowerShell'
+        name: 'Install Notepad++'
+        inline: [
+          'Set-ExecutionPolicy Bypass -Scope Process -Force;'
+          'choco install -y notepadplusplus --ia \'--quiet --accept-license\';'
+        ]
+      }
+      {
+        type: 'PowerShell'
+        name: 'Fix Sysprep call'
+        inline: [
+          'try { ((Get-Content -path C:\\DeprovisioningScript.ps1 -Raw) -replace \'Sysprep.exe /oobe /generalize /quiet /quit\', \'Sysprep.exe /oobe /generalize /quit /mode:vm\' ) | Set-Content -Path C:\\DeprovisioningScript.ps1 }'
+        ]
+      }
+      {
+        type: 'WindowsRestart'
+        name: 'Restart Computer'
+        restartTimeout: '10m'
+      }
+      {
+        type: 'PowerShell'
+        name: 'Sleep'
+        inline: [
+          'Start-Sleep -Seconds 60'
+        ]
       }
     ]
     distribute: [
       {
         type: 'SharedImage'
+        excludeFromLatest: false
         galleryImageId: gallery::image.id
         runOutputName: '${name}SharedImage'
         replicationRegions: [
@@ -165,7 +147,8 @@ resource imageTemplate 'Microsoft.VirtualMachineImages/imageTemplates@2022-02-14
         }
       }
     ]
-    buildTimeoutInMinutes: 240
+    buildTimeoutInMinutes: 120
+
   }
 }
 
