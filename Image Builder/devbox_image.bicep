@@ -17,31 +17,31 @@ resource gallery 'Microsoft.Compute/galleries@2022-03-03' = {
     name: '${name}-DevBox-Image'
     location: location
     properties: {
-      osType: 'Windows'
-      identifier: {
-        offer: 'Windows11'
-        publisher: 'Etchasoft'
-        sku: '${name}_Win11-VS-SSMS'
-      }
-      osState: 'Generalized'
       hyperVGeneration: 'V2'
+      architecture: 'x64'
       features: [
         {
           name: 'SecurityType'
           value: 'TrustedLaunchSupported'
         }
       ]
+      osType: 'Windows'
+      osState: 'Generalized'
+      identifier: {
+        offer: 'Windows11'
+        publisher: 'Etchasoft'
+        sku: '${name}_Win11-VS-SSMS'
+      }
       recommended: {
         vCPUs: {
           min: 4
           max: 16
         }
         memory: {
-          min: 8
+          min: 16
           max: 64
         }
       }
-      architecture: 'x64'
     }
   }
 }
@@ -115,7 +115,7 @@ resource imageTemplate 'Microsoft.VirtualMachineImages/imageTemplates@2022-02-14
         type: 'PowerShell'
         name: 'Fix Sysprep call'
         inline: [
-          'try { ((Get-Content -path C:\\DeprovisioningScript.ps1 -Raw) -replace \'Sysprep.exe /oobe /generalize /quiet /quit\', \'Sysprep.exe /oobe /generalize /quit /mode:vm\' ) | Set-Content -Path C:\\DeprovisioningScript.ps1;     write-log \'Sysprep Mode:VM fix applied\'; } catch { $ErrorMessage = $_.Exception.message; write-log \'Error updating script: $ErrorMessage\';  }'
+          'try { ((Get-Content -path C:\\DeprovisioningScript.ps1 -Raw) -replace \'Sysprep.exe /oobe /generalize /quiet /quit\', \'Sysprep.exe /oobe /generalize /quiet /quit /mode:vm\' ) | Set-Content -Path C:\\DeprovisioningScript.ps1;     write-log \'Sysprep Mode:VM fix applied\'; } catch { $ErrorMessage = $_.Exception.message; write-log \'Error updating script: $ErrorMessage\';  }'
         ]
       }
       {
@@ -128,6 +128,20 @@ resource imageTemplate 'Microsoft.VirtualMachineImages/imageTemplates@2022-02-14
         name: 'Sleep'
         inline: [
           'Start-Sleep -Seconds 60'
+        ]
+      }
+      {
+        type: 'PowerShell'
+        name: 'Set Theme to dark'
+        inline: [
+          '$ProgressPreference = \'SilentlyContinue\'	# hide any progress output;  $process = Start-Process -FilePath "C:\\Windows\\Resources\\Themes\\dark.theme"; timeout /t 3; taskkill /im "systemsettings.exe" /f; exit $process.ExitCode;'
+        ]
+      }
+      {
+        type: 'PowerShell'
+        name: 'Sleep'
+        inline: [
+          'Get-AppxPackage -Name *NotepadPlusPlus* | Remove-AppxPackage'
         ]
       }
     ]

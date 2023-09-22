@@ -2,6 +2,8 @@
 param Name string
 @description('The location of the virtual machine')
 param Location string = resourceGroup().location
+@description('The Resouce Group Name that contains the Virtual Network')
+param vnet_rg string = 'NerdioManager'
 @description('The ResourceId of the Virtual Network for the virtual machine')
 param vnetName string = 'NerdioVnet'
 @description('The subnet to use in the virtual network')
@@ -30,7 +32,7 @@ resource nic 'Microsoft.Network/networkInterfaces@2022-11-01' = {
         name: 'ipconfig1'
         properties: {
           subnet: {
-            id: resourceId('NerdioManager','Microsoft.Network/virtualNetworks/subnets',vnetName,subnetName)
+            id: resourceId(vnet_rg,'Microsoft.Network/virtualNetworks/subnets',vnetName,subnetName)
           }
           privateIPAllocationMethod: 'Dynamic'
         }

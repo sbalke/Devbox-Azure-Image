@@ -3,7 +3,10 @@
   "contentVersion": "1.0.0.0",
   "parameters": {
     "Name": {
-      "value": "Neach"
+      "value": "Phia"
+    },
+    "vnet_rg": {
+      "value": "NerdioManager"
     },
     "vnetName": {
       "value": "NerdioVnet"
@@ -12,7 +15,7 @@
       "value": "DevBox"
     },
     "virtualMachineSize": {
-      "value": "Standard_B4ms"
+      "value": "Standard_DS2_v2"
     },
     "adminUsername": {
       "value": "sbalke"
@@ -21,10 +24,10 @@
       "value": "microsoftvisualstudio"
     },
     "offer": {
-      "value": "visualstudio2019plustools"
+      "value": "visualstudioplustools"
     },
     "sku": {
-      "value": "vs-2019-pro-general-win11-m365-gen2"
+      "value": "vs-2022-ent-general-win11-m365-gen2"
     }
   }
 }
