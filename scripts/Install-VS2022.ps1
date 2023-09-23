@@ -4,6 +4,7 @@
 # Details:
 # - https://docs.microsoft.com/en-us/visualstudio/install/use-command-line-parameters-to-install-visual-studio?view=vs-2022
 # - https://docs.microsoft.com/en-us/visualstudio/install/workload-component-id-vs-enterprise?view=vs-2022
+Set-ExecutionPolicy Bypass -Scope Process -Force;
 
 $ProgressPreference = 'SilentlyContinue'	# hide any progress output
 
@@ -18,9 +19,10 @@ $process = Start-Process -FilePath $installerPath -ArgumentList `
 	"--add", "Microsoft.VisualStudio.Workload.CoreEditor", `
 	"--add", "Microsoft.VisualStudio.Workload.Azure", `
 	"--add", "Microsoft.VisualStudio.Workload.NetWeb", `
-	"--add", "Microsoft.VisualStudio.Workload.Node", `
-	"--add", "Microsoft.VisualStudio.Workload.Python", `
+	"--add", "Microsoft.VisualStudio.Workload.Data", `
+	"--add", "Microsoft.VisualStudio.Workload.NetCrossPlat", `
 	"--add", "Microsoft.VisualStudio.Workload.ManagedDesktop", `
+	"--add", "Microsoft.VisualStudio.Component.Git", `
 	"--includeRecommended", `
 	"--installWhileDownloading", `
 	"--quiet", `
