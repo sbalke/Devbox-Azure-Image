@@ -22,7 +22,7 @@ resource gallery 'Microsoft.Compute/galleries@2022-03-03' = {
       features: [
         {
           name: 'SecurityType'
-          value: 'TrustedLaunchSupported'
+          value: 'TrustedLaunch'
         }
       ]
       osType: 'Windows'
@@ -113,6 +113,11 @@ resource imageTemplate 'Microsoft.VirtualMachineImages/imageTemplates@2022-02-14
       }
       {
         type: 'PowerShell'
+        name: 'Install Visual Studio 2022 Ent'
+        scriptUri: 'https://raw.githubusercontent.com/sbalke/Devbox-Azure-Image/main/scripts/Install-VS2022.ps1'
+      }
+      {
+        type: 'PowerShell'
         name: 'Fix Sysprep call'
         inline: [
           'try { ((Get-Content -path C:\\DeprovisioningScript.ps1 -Raw) -replace \'Sysprep.exe /oobe /generalize /quiet /quit\', \'Sysprep.exe /oobe /generalize /quiet /quit /mode:vm\' ) | Set-Content -Path C:\\DeprovisioningScript.ps1;     write-log \'Sysprep Mode:VM fix applied\'; } catch { $ErrorMessage = $_.Exception.message; write-log \'Error updating script: $ErrorMessage\';  }'
@@ -132,16 +137,16 @@ resource imageTemplate 'Microsoft.VirtualMachineImages/imageTemplates@2022-02-14
       }
       {
         type: 'PowerShell'
-        name: 'Set Theme to dark'
+        name: 'Sleep'
         inline: [
-          '$ProgressPreference = \'SilentlyContinue\'	# hide any progress output;  $process = Start-Process -FilePath "C:\\Windows\\Resources\\Themes\\dark.theme"; timeout /t 3; taskkill /im "systemsettings.exe" /f; exit $process.ExitCode;'
+          'Get-AppxPackage -Name *NotepadPlusPlus* | Remove-AppxPackage'
         ]
       }
       {
         type: 'PowerShell'
-        name: 'Sleep'
+        name: 'Set Theme to dark'
         inline: [
-          'Get-AppxPackage -Name *NotepadPlusPlus* | Remove-AppxPackage'
+          '$ProgressPreference = \'SilentlyContinue\'	# hide any progress output;  $process = Start-Process -FilePath "C:\\Windows\\Resources\\Themes\\dark.theme"; timeout /t 3; taskkill /im "systemsettings.exe" /f; exit $process.ExitCode;'
         ]
       }
     ]

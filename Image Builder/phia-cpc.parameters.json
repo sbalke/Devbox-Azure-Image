@@ -1,0 +1,24 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "publisher": {
+      "value": "microsoftwindowsdesktop"
+    },
+    "offer": {
+      "value": "windows-ent-cpc"
+    },
+    "sku": {
+      "value": "win11-22h2-ent-cpc-m365"
+    },
+    "version": {
+      "value": "latest"
+    },
+    "galleryName": {
+      "value": "DevBox_Compute_Gallery"
+    },
+    "name": {
+      "value": "PHIA"
+    }
+  }
+}
