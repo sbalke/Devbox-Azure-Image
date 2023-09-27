@@ -77,6 +77,29 @@ resource imageTemplate 'Microsoft.VirtualMachineImages/imageTemplates@2022-02-14
     customize: [
       {
         type: 'PowerShell'
+        name: 'Create BuildArtifacts Directory'
+        scriptUri: 'https://raw.githubusercontent.com/sbalke/Devbox-Azure-Image/main/scripts/Create-ArtifactsFolder.ps1'
+      }
+      {
+        type: 'File'
+        name: 'Copy Files '
+        destination: 'C:\\BuildArtifacts\\Install-Docker.ps1'
+        sourceUri: 'https://raw.githubusercontent.com/sbalke/Devbox-Azure-Image/main/scripts/Install-Docker.ps1'
+      }
+      {
+        type: 'File'
+        name: 'Copy Files '
+        destination: 'C:\\BuildArtifacts\\Clone-Repo.ps1'
+        sourceUri: 'https://raw.githubusercontent.com/sbalke/Devbox-Azure-Image/main/scripts/Clone-Repo.ps1'
+      }
+      {
+        type: 'File'
+        name: 'Copy Files '
+        destination: 'C:\\BuildArtifacts\\Install-${name}.ps1'
+        sourceUri: 'https://raw.githubusercontent.com/sbalke/Devbox-Azure-Image/main/scripts/Install-${name}.ps1'
+      }
+      {
+        type: 'PowerShell'
         name: 'Install Chocolatey'
         inline: [
           'Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString(\'https://chocolatey.org/install.ps1\'));'

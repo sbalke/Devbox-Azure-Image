@@ -1,9 +1,7 @@
-Start-Transcript -Path "installdocker.log"
+Start-Transcript -Path "C:\BuildArtifacts\installdocker.log";
 
-if($useChoco) {
-    choco install -y docker-desktop
-} else {
-    winget install Docker.DockerDesktop --silent --source winget --accept-package-agreements --accept-source-agreements
-}
+Set-ExecutionPolicy Bypass -Scope Process -Force;
+choco install -y docker-desktop --version 4.23 --ia \'--quiet --accept-license\';
 
-Stop-Transcript
+
+Stop-Transcript;
