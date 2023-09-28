@@ -100,6 +100,32 @@ resource imageTemplate 'Microsoft.VirtualMachineImages/imageTemplates@2022-02-14
       }
       {
         type: 'PowerShell'
+        name: 'Set Computer Name'
+        inline: [
+          'Set-ExecutionPolicy Bypass -Scope Process -Force;'
+          'write-output "**************************************************************************";'
+          '$env:computername;'
+          'write-output "**************************************************************************";'
+          'Rename-Computer -NewName "${name}";'
+          'write-output "**************************************************************************";'
+        ]
+      }
+      {
+        type: 'WindowsRestart'
+        name: 'Restart Computer'
+        restartTimeout: '10m'
+      }
+      {
+        type: 'PowerShell'
+        name: 'Set Computer Name'
+        inline: [
+          'write-output "**************************************************************************";'
+          '$env:computername;'
+          'write-output "**************************************************************************";'
+        ]
+      }
+      {
+        type: 'PowerShell'
         name: 'Install Chocolatey'
         inline: [
           'Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString(\'https://chocolatey.org/install.ps1\'));'
@@ -117,6 +143,15 @@ resource imageTemplate 'Microsoft.VirtualMachineImages/imageTemplates@2022-02-14
         type: 'WindowsRestart'
         name: 'Restart Computer'
         restartTimeout: '10m'
+      }
+      {
+        type: 'PowerShell'
+        name: 'Fix Docker'
+        inline: [
+          'Set-ExecutionPolicy Bypass -Scope Process -Force;'
+          'wsl --update;'
+          'net localgroup docker-users Administrators /add'
+        ]
       }
       {
         type: 'PowerShell'
