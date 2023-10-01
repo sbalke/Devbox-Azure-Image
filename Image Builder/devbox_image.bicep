@@ -138,11 +138,21 @@ resource imageTemplate 'Microsoft.VirtualMachineImages/imageTemplates@2022-02-14
           'Set-ExecutionPolicy Bypass -Scope Process -Force;'
           'write-host "********************************************************************";'
           'net localgroup docker-users'
-          'wsl --update;'
-          'net localgroup docker-users "NT AUTHORITY\\Authenticated Users" /add'
+           'net localgroup docker-users "NT AUTHORITY\\Authenticated Users" /add'
           'net localgroup docker-users'
           'write-host "********************************************************************";'
           'Stop-Transcript;'
+        ]
+      }
+      {
+        type: 'PowerShell'
+        name: 'update wsl'
+        runElevated: true
+        runAsSystem: true
+        inline: [
+          'Start-Transcript -Path "C:\\buildArtifacts\\wslupdate.log";'
+          'wsl --update;'
+          'Stop-Transcript";'
         ]
       }
       {
@@ -222,3 +232,6 @@ resource imageTemplate 'Microsoft.VirtualMachineImages/imageTemplates@2022-02-14
 }
 
 output imageId string = gallery::image.id
+
+
+
