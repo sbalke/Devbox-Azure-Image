@@ -203,11 +203,9 @@ resource imageTemplate 'Microsoft.VirtualMachineImages/imageTemplates@2022-02-14
         ]
       }
       {
-        type: 'PowerShell'
-        name: 'Set Theme to dark'
-        inline: [
-          '$ProgressPreference = \'SilentlyContinue\'	# hide any progress output;  $process = Start-Process -FilePath "C:\\Windows\\Resources\\Themes\\dark.theme"; timeout /t 3; taskkill /im "systemsettings.exe" /f; exit $process.ExitCode;'
-        ]
+        type: 'WindowsUpdate'
+        name: 'Install Updates'
+        updateLimit: 20
       }
     ]
     distribute: [
