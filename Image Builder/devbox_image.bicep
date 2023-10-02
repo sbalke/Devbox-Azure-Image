@@ -204,8 +204,17 @@ resource imageTemplate 'Microsoft.VirtualMachineImages/imageTemplates@2022-02-14
       }
       {
         type: 'WindowsUpdate'
-        name: 'Install Updates'
+        searchCriteria: 'IsInstalled=0'
+        filters: [
+          'exclude:$_.Title -like \'*Preview*\''
+          'include:$true'
+        ]
         updateLimit: 20
+      }
+      {
+        type: 'WindowsRestart'
+        name: 'Reboot After Updates'
+        restartTimeout: '10m'
       }
     ]
     distribute: [
