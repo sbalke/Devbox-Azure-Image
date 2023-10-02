@@ -6,6 +6,7 @@ param version string //= 'latest'
 param galleryName string
 param name string
 param location string = resourceGroup().location
+param installDocker bool = true
 
 var urlBase = 'https://raw.githubusercontent.com/sbalke/Devbox-Azure-Image/main/scripts/'
 var installName = '${urlBase}Install-${name}.ps1'
@@ -124,11 +125,17 @@ resource imageTemplate 'Microsoft.VirtualMachineImages/imageTemplates@2022-02-14
           'Set-ExecutionPolicy Bypass -Scope Process -Force;'
           'choco install -y docker-desktop --version 4.23 --ia \'--quiet --accept-license\';'
         ]
-      }
+      } 
       {
         type: 'WindowsRestart'
         name: 'Restart Computer'
         restartTimeout: '10m'
+      }
+      {
+        type:'PowerShell'
+        name: 'WSL Update'
+        scriptUri: 'https://raw.githubusercontent.com/sbalke/Devbox-Azure-Image/main/scripts/Install-WSL-Kernel-Update.ps1'
+        
       }
       {
         type: 'PowerShell'
