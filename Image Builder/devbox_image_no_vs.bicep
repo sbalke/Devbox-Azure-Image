@@ -30,7 +30,7 @@ resource gallery 'Microsoft.Compute/galleries@2022-03-03' = {
       identifier: {
         offer: 'Windows11'
         publisher: 'Etchasoft'
-        sku: '${name}_Win11-VS-SSMS_Docker'
+        sku: '${name}_Win11-VS-SSMS'
       }
       recommended: {
         vCPUs: {
