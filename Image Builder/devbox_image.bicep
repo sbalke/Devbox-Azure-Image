@@ -86,6 +86,12 @@ resource imageTemplate 'Microsoft.VirtualMachineImages/imageTemplates@2022-02-14
         scriptUri: 'https://raw.githubusercontent.com/sbalke/Devbox-Azure-Image/main/scripts/Copy-Files.ps1'
       }
       {
+        type: 'File'
+        name: 'COpy ${name}'
+        destination: 'C:\\BuildArtifacts\\Install-${name}.ps1'
+        sourceUri: installName
+      }
+      {
         type: 'PowerShell'
         name: 'Install Chocolatey'
         inline: [
@@ -98,7 +104,7 @@ resource imageTemplate 'Microsoft.VirtualMachineImages/imageTemplates@2022-02-14
         inline: [
           'Set-ExecutionPolicy Bypass -Scope Process -Force;'
           'cd \\BuildArtifacts\\' 
-          '& Install-${name}.ps1'         
+          '& C:\\BuildArtifacts\\Install-${name}.ps1'         
         ]
       }
 /*

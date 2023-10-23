@@ -3,9 +3,10 @@ $files = @("Clone-Repo.ps1",
 "Fix-Docker.ps1",
 "Fix-Sysprep.ps1",
 "Generalize-VM.ps1",
-"Install-Chocolatey.ps1",
+"Install-AzureStorageExplorer.ps1"
 "Install-Docker.ps1",
 "Install-DotNet.ps1",
+"Install-Filezilla.ps1"
 "Install-Git.ps1",
 "Install-GitHub-CLI.ps1",
 "Install-GitHubDesktop.ps1",
