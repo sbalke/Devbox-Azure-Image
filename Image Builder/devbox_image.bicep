@@ -6,7 +6,6 @@ param version string //= 'latest'
 param galleryName string
 param name string
 param location string = resourceGroup().location
-param installDocker bool = true
 
 var urlBase = 'https://raw.githubusercontent.com/sbalke/Devbox-Azure-Image/main/scripts/'
 var installName = '${urlBase}Install-${name}.ps1'
@@ -82,34 +81,9 @@ resource imageTemplate 'Microsoft.VirtualMachineImages/imageTemplates@2022-02-14
         scriptUri: 'https://raw.githubusercontent.com/sbalke/Devbox-Azure-Image/main/scripts/Create-ArtifactsFolder.ps1'
       }
       {
-        type: 'File'
+        type: 'PowerShell'
         name: 'Copy Files '
-        destination: 'C:\\BuildArtifacts\\Install-Docker.ps1'
-        sourceUri: 'https://raw.githubusercontent.com/sbalke/Devbox-Azure-Image/main/scripts/Install-Docker.ps1'
-      }
-      {
-        type: 'File'
-        name: 'Copy Files '
-        destination: 'C:\\BuildArtifacts\\Clone-Repo.ps1'
-        sourceUri: 'https://raw.githubusercontent.com/sbalke/Devbox-Azure-Image/main/scripts/Clone-Repo.ps1'
-      }
-      {
-        type: 'File'
-        name: 'Copy Files '
-        destination: 'C:\\BuildArtifacts\\Install-${name}.ps1'
-        sourceUri: 'https://raw.githubusercontent.com/sbalke/Devbox-Azure-Image/main/scripts/Install-${name}.ps1'
-      }
-      {
-        type: 'File'
-        name: 'Copy Files '
-        destination: 'C:\\BuildArtifacts\\Fix-Docker.ps1'
-        sourceUri: 'https://raw.githubusercontent.com/sbalke/Devbox-Azure-Image/main/scripts/Fix-Docker.ps1'
-      }
-      {
-        type: 'File'
-        name: 'Copy Files '
-        destination: 'C:\\BuildArtifacts\\Set-Theme.ps1'
-        sourceUri: 'https://raw.githubusercontent.com/sbalke/Devbox-Azure-Image/main/scripts/Set-Theme.ps1'
+        scriptUri: 'https://raw.githubusercontent.com/sbalke/Devbox-Azure-Image/main/scripts/Copy-Files.ps1'
       }
       {
         type: 'PowerShell'
@@ -120,10 +94,20 @@ resource imageTemplate 'Microsoft.VirtualMachineImages/imageTemplates@2022-02-14
       }
       {
         type: 'PowerShell'
+        name: 'Install Software'
+        inline: [
+          'Set-ExecutionPolicy Bypass -Scope Process -Force;'
+          'cd \\BuildArtifacts\\' 
+          '& Install-${name}.ps1'         
+        ]
+      }
+/*
+      {
+        type: 'PowerShell'
         name: 'Install Docker-Desktop'
         inline: [
           'Set-ExecutionPolicy Bypass -Scope Process -Force;'
-          'choco install -y docker-desktop --version 4.23 --ia \'--quiet --accept-license\';'
+          'choco install -y docker-desktop --ia \'--quiet --accept-license\';'
         ]
       } 
       {
@@ -185,6 +169,14 @@ resource imageTemplate 'Microsoft.VirtualMachineImages/imageTemplates@2022-02-14
       }
       {
         type: 'PowerShell'
+        name: 'Install Azure Storage Explorer'
+        inline: [
+          'Set-ExecutionPolicy Bypass -Scope Process -Force;'
+          'choco install -y microsoftazurestorageexplorer'
+        ]
+      }
+      {
+        type: 'PowerShell'
         name: 'Fix Sysprep call'
         inline: [
           'try { ((Get-Content -path C:\\DeprovisioningScript.ps1 -Raw) -replace \'Sysprep.exe /oobe /generalize /quiet /quit\', \'Sysprep.exe /oobe /generalize /quiet /quit /mode:vm\' ) | Set-Content -Path C:\\DeprovisioningScript.ps1;     write-log \'Sysprep Mode:VM fix applied\'; } catch { $ErrorMessage = $_.Exception.message; write-log \'Error updating script: $ErrorMessage\';  }'
@@ -208,7 +200,7 @@ resource imageTemplate 'Microsoft.VirtualMachineImages/imageTemplates@2022-02-14
         inline: [
           'Get-AppxPackage -Name *NotepadPlusPlus* | Remove-AppxPackage'
         ]
-      }
+      }*/
       {
         type: 'WindowsUpdate'
         searchCriteria: 'IsInstalled=0'
@@ -227,7 +219,7 @@ resource imageTemplate 'Microsoft.VirtualMachineImages/imageTemplates@2022-02-14
     distribute: [
       {
         type: 'SharedImage'
-        excludeFromLatest: false
+        excludeFromLatest: true
         galleryImageId: gallery::image.id
         runOutputName: '${name}SharedImage'
         replicationRegions: [
