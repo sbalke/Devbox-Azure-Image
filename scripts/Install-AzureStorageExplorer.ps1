@@ -1,4 +1,4 @@
-Start-Transcript -Path "C:\BuildArtifacts\installfilezilla.log";
+Start-Transcript -Path "C:\BuildArtifacts\installazurestorageexpolorer.log";
 
 Set-ExecutionPolicy Bypass -Scope Process -Force;
 

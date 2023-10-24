@@ -1,9 +1,6 @@
 Start-Transcript -Path "C:\buildartifacts\installnotepad++.log"
 
-if($useChoco) {
-    choco install -y notepadplusplus
-} else {
-    winget install Notepad++.Notepad++ -h --disable-interactivity --accept-package-agreements --accept-source-agreements
-}
+Set-ExecutionPolicy Bypass -Scope Process -Force;
+choco install -y notepadplusplus
 
 Stop-Transcript
