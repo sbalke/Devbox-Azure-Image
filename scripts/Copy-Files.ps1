@@ -18,7 +18,8 @@ $files = @("Clone-Repo.ps1",
 "Install-Winget.ps1",
 "Install-WSL-Kernel-Update.ps1",
 "Remove-AppxPackages.ps1",
-"Set-Theme.ps1")
+"Set-Theme.ps1",
+"Install-VS2017.ps1")
 
 
 foreach($file in $files) {
