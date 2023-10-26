@@ -208,6 +208,13 @@ resource imageTemplate 'Microsoft.VirtualMachineImages/imageTemplates@2022-02-14
         ]
       }*/
       {
+        type: 'PowerShell'
+        name: 'Fix Sysprep call'
+        inline: [
+          'try { ((Get-Content -path C:\\DeprovisioningScript.ps1 -Raw) -replace \'Sysprep.exe /oobe /generalize /quiet /quit\', \'Sysprep.exe /oobe /generalize /quiet /quit /mode:vm\' ) | Set-Content -Path C:\\DeprovisioningScript.ps1;     write-log \'Sysprep Mode:VM fix applied\'; } catch { $ErrorMessage = $_.Exception.message; write-log \'Error updating script: $ErrorMessage\';  }'
+        ]
+      }
+      {
         type: 'WindowsUpdate'
         searchCriteria: 'IsInstalled=0'
         filters: [
