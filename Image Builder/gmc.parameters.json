@@ -1,0 +1,24 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "publisher": {
+        "value": "microsoftvisualstudio"
+      },
+      "offer": {
+        "value": "visualstudioplustools"
+      },
+      "sku": {
+        "value": "vs-2022-ent-general-win11-m365-gen2"
+      },
+      "version": {
+        "value": "latest"
+      },
+      "galleryName": {
+        "value": "DevBox_Compute_Gallery"
+      },
+      "name": {
+        "value": "GMC"
+      }
+    }
+  }
